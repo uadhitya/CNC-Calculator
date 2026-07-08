@@ -11,28 +11,37 @@
         
         <div class="border-b border-slate-200 pb-4 mb-6">
             <h1 class="text-2xl font-bold text-slate-800">Kalkulator Jasa CNC Presisi</h1>
-            <p class="text-sm text-slate-500 mt-1">Sistem estimasi harga berbasis data teknis & pemesinan</p>
+            <p class="text-sm text-slate-500 mt-1">Sistem estimasi harga berbasis data teknis & pemesinan akurat</p>
         </div>
         
         <div class="space-y-5">
+            
             <div>
                 <label class="block text-sm font-semibold text-slate-700 mb-1">
-                    1. Durasi Pengerjaan Mesin (Data dari Software CAM)
+                    1. Durasi Pengerjaan Mesin (Sesuai Output CAM)
                 </label>
-                <div class="relative rounded-md shadow-sm">
-                    <input type="number" id="machineTime" step="0.1" min="0.1" class="w-full border border-slate-300 p-2.5 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-slate-800 font-medium" placeholder="Contoh: 1.5 untuk 1 jam 30 menit" value="1">
-                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                        <span class="text-slate-500 sm:text-sm">Jam</span>
+                <div class="grid grid-cols-3 gap-2">
+                    <div class="relative">
+                        <input type="number" id="inputHours" min="0" class="w-full border border-slate-300 p-2.5 rounded-lg focus:ring-2 focus:ring-blue-500 font-medium text-slate-800" placeholder="0" value="0">
+                        <span class="absolute right-3 top-2.5 text-xs text-slate-400 font-bold">JAM</span>
+                    </div>
+                    <div class="relative">
+                        <input type="number" id="inputMinutes" min="0" max="59" class="w-full border border-slate-300 p-2.5 rounded-lg focus:ring-2 focus:ring-blue-500 font-medium text-slate-800" placeholder="0" value="45">
+                        <span class="absolute right-3 top-2.5 text-xs text-slate-400 font-bold">MENIT</span>
+                    </div>
+                    <div class="relative">
+                        <input type="number" id="inputSeconds" min="0" max="59" class="w-full border border-slate-300 p-2.5 rounded-lg focus:ring-2 focus:ring-blue-500 font-medium text-slate-800" placeholder="0" value="30">
+                        <span class="absolute right-3 top-2.5 text-xs text-slate-400 font-bold">DETIK</span>
                     </div>
                 </div>
-                <p class="text-xs text-slate-400 mt-1">*Masukkan angka desimal (misal: 30 menit = 0.5 jam | 45 menit = 0.75 jam)</p>
+                <p class="text-xs text-slate-400 mt-1.5">*Masukkan durasi persis seperti yang tertera di software simulasi CAM Anda.</p>
             </div>
 
             <div>
                 <label class="block text-sm font-semibold text-slate-700 mb-1">
                     2. Spesifikasi Material (Karakteristik Keausan Mata Bit)
                 </label>
-                <select id="materialType" class="w-full border border-slate-300 p-2.5 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-slate-800 font-medium bg-white">
+                <select id="materialType" class="w-full border border-slate-300 p-2.5 rounded-lg focus:ring-2 focus:ring-blue-500 font-medium text-slate-800 bg-white">
                     <option value="5000">Kayu Lunak / Pinus (Abrasivitas Rendah - Bit Rp 5.000/jam)</option>
                     <option value="8000" selected>Akrilik / Plastik (Thermal Sensitive - Bit Rp 8.000/jam)</option>
                     <option value="12000">Kayu Keras / Jati / Mahoni (Abrasivitas Sedang - Bit Rp 12.000/jam)</option>
@@ -54,46 +63,59 @@
                 <span class="text-xs font-medium text-slate-500 bg-slate-200 px-2 py-1 rounded">Siap Produksi</span>
             </div>
             
-            <div class="text-xs text-slate-600 space-y-1">
+            <div class="text-xs text-slate-600 space-y-1.5">
                 <p class="font-semibold text-slate-700">Rincian Komponen Biaya:</p>
                 <div class="flex justify-between">
                     <span>• Biaya Setup & Programming (CAM):</span>
                     <span class="font-medium">Rp 50.000</span>
                 </div>
                 <div class="flex justify-between">
-                    <span>• Operasional Mesin (Standar Terpadu):</span>
+                    <span>• Operasional Mesin Terpadu (MHR Rp 110rb/jam):</span>
                     <span class="font-medium" id="displayMHR">Rp 0</span>
                 </div>
                 <div class="flex justify-between">
                     <span>• Konsumsi / Keausan Mata Bit:</span>
                     <span class="font-medium" id="displayTool">Rp 0</span>
                 </div>
+                <div class="flex justify-between border-t border-slate-200 pt-1.5 text-slate-500">
+                    <span>• Total Waktu Mesin Aktual:</span>
+                    <span class="font-semibold text-slate-700" id="displayTimeText">0 Jam 0 Menit 0 Detik</span>
+                </div>
             </div>
             <p class="text-[11px] text-slate-400 italic mt-3 pt-2 border-t border-slate-200">
-                *Harga dihitung secara ilmiah menjamin toleransi presisi dimensi dan keamanan material Anda.
+                *Harga dihitung secara ilmiah menjamin toleransi presisi dimensi, keamanan material, serta kesejahteraan operator.
             </p>
         </div>
     </div>
 
     <script>
         // KONSTANTA STANDAR BENGKEL (Tertanam & Tidak Dilihat Pelanggan)
-        const MHR_RATE = 85000; // Machine Hourly Rate (Gaji Operator Rp 6.5jt, Listrik, Depresiasi, Software)
+        // MHR_RATE Rp 110.000 mencakup: Gaji Operator Rp 6.5jt, Listrik, Depresiasi, Software, Perawatan + Risiko 10% & Profit 20%
+        const MHR_RATE = 110000; 
         const SETUP_FEE = 50000; // Biaya keahlian CAM, clamping, & zeroing koordinat
 
         function calculateScientific() {
-            // 1. Ambil Nilai Input
-            const time = parseFloat(document.getElementById('machineTime').value) || 0;
+            // 1. Ambil Nilai Input Jam, Menit, dan Detik
+            const hours = parseFloat(document.getElementById('inputHours').value) || 0;
+            const minutes = parseFloat(document.getElementById('inputMinutes').value) || 0;
+            const seconds = parseFloat(document.getElementById('inputSeconds').value) || 0;
             const toolWearRate = parseFloat(document.getElementById('materialType').value) || 0;
             
-            // 2. Kalkulasi Komponen
-            const totalMHR = time * MHR_RATE;
-            const totalToolCost = time * toolWearRate;
+            // 2. Konversi Waktu ke Total Jam Presisi (Desimal Akurat)
+            const totalTimeInHours = hours + (minutes / 60) + (seconds / 3600);
+            
+            // 3. Kalkulasi Komponen Biaya
+            const totalMHR = totalTimeInHours * MHR_RATE;
+            const totalToolCost = totalTimeInHours * toolWearRate;
             const grandTotal = SETUP_FEE + totalMHR + totalToolCost;
 
-            // 3. Tampilkan ke Layar dengan Format Rupiah
+            // 4. Tampilkan ke Layar dengan Format Rupiah
             document.getElementById('totalPrice').innerText = formatRupiah(grandTotal);
-            document.getElementById('displayMHR').innerText = formatRupiah(totalMHR) + ` (${time} jam)`;
+            document.getElementById('displayMHR').innerText = formatRupiah(totalMHR);
             document.getElementById('displayTool').innerText = formatRupiah(totalToolCost);
+            
+            // Tampilkan kembali teks waktu agar mudah dibaca klien
+            document.getElementById('displayTimeText').innerText = `${hours} Jam ${minutes} Menit ${seconds} Detik`;
         }
 
         function formatRupiah(number) {
