@@ -3,284 +3,277 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CNC Industrial ERP-Lite Pricing System</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-slate-100 min-h-screen p-4 md:p-8 font-sans">
-    <div class="max-w-2xl mx-auto bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
+    <title>Sistem Kalkulasi Jasa CNC Presisi v4.0</title>
+    <style>
+        :root { --bg: #f8fafc; --surface: #ffffff; --border: #e2e8f0; --text: #0f172a; --primary: #2563eb; --primary-hover: #1d4ed8; --dark: #0f172a; --accent: #10b981; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background: var(--bg); color: var(--text); padding: 20px; line-height: 1.5; }
+        .container { max-width: 700px; margin: 0 auto; background: var(--surface); border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border: 1px solid var(--border); overflow: hidden; }
+        .header { background: var(--dark); color: white; padding: 20px; }
+        .header h1 { font-size: 20px; font-weight: 700; }
+        .header p { font-size: 12px; color: #94a3b8; margin-top: 4px; font-family: monospace; }
         
-        <div class="bg-slate-900 p-6 text-white">
-            <div class="flex justify-between items-center">
-                <div>
-                    <h1 class="text-2xl font-bold tracking-tight">Sistem Kalkulasi Jasa CNC Router</h1>
-                    <p class="text-xs text-slate-400 mt-1">Engine Re-scalable Berbasis Komponen Biaya Variabel Pasar</p>
-                </div>
-                <span class="bg-blue-500/20 text-blue-400 border border-blue-500/30 text-xs font-mono px-2.5 py-1 rounded">v2.0-ConfigDriven</span>
-            </div>
-        </div>
+        /* Tab Navigation */
+        .tabs { display: flex; background: #f1f5f9; border-bottom: 1px solid var(--border); }
+        .tab-btn { flex: 1; padding: 14px; border: none; background: transparent; font-size: 13px; font-weight: 700; color: #64748b; cursor: pointer; transition: 0.2s; border-bottom: 3px solid transparent; }
+        .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); background: white; }
+        
+        /* Form & Layouts */
+        .content { padding: 24px; }
+        .section-title { font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 4px; }
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+        
+        input, select { w-full; width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; font-weight: 600; color: var(--dark); background: white; outline: none; transition: 0.2s; font-family: monospace; }
+        input:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
+        .readonly-box { background: #f8fafc; border: 1px dashed #cbd5e1; padding: 10px; border-radius: 6px; font-size: 12px; color: #475569; }
+        
+        /* Output Invoice Card */
+        .invoice-card { background: var(--dark); color: white; padding: 20px; border-radius: 8px; margin-top: 24px; }
+        .inv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; border-bottom: 1px solid #334155; padding-bottom: 16px; margin-bottom: 16px; }
+        .inv-label { font-size: 11px; color: #94a3b8; text-transform: uppercase; font-weight: 700; }
+        .inv-value { font-size: 24px; font-weight: 800; color: var(--accent); font-family: monospace; margin-top: 2px; }
+        .inv-value.blue { color: #60a5fa; }
+        
+        /* 5 Laci Keuangan Table */
+        .laci-title { font-size: 12px; font-weight: 700; color: #f8fafc; margin-bottom: 8px; display: flex; justify-content: space-between; }
+        .laci-table { width: 100%; font-size: 12px; border-collapse: collapse; }
+        .laci-table td { padding: 6px 0; border-bottom: 1px solid #1e293b; color: #cbd5e1; font-family: monospace; }
+        .laci-table td.amount { text-align: right; font-weight: 700; color: #fff; }
+        .badge { background: #1e293b; color: #38bdf8; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: bold; }
+    </style>
+</head>
+<body>
 
-        <div class="flex border-b border-slate-200 bg-slate-50">
-            <button onclick="switchModule('B2C')" id="tabB2C" class="flex-1 py-4 text-center font-bold text-sm border-b-2 border-blue-600 text-blue-600 transition">
-                🔲 MODUL SATUAN (B2C)
-            </button>
-            <button onclick="switchModule('B2B')" id="tabB2B" class="flex-1 py-4 text-center font-bold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800 transition">
-                📦 MODUL MASSAL / BATCH (B2B)
-            </button>
-        </div>
-
-        <div class="p-6 space-y-6">
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">
-                        1. Durasi Pemesinan Aktual Sesuai Simulasi CAM
-                    </label>
-                    <div class="grid grid-cols-3 gap-2">
-                        <div class="relative">
-                            <input type="number" id="inputHours" min="0" class="w-full border border-slate-300 p-2.5 rounded-lg font-mono font-bold text-slate-800 focus:ring-2 focus:ring-blue-500" value="1">
-                            <span class="absolute right-3 top-3 text-[10px] text-slate-400 font-extrabold">JAM</span>
-                        </div>
-                        <div class="relative">
-                            <input type="number" id="inputMinutes" min="0" max="59" class="w-full border border-slate-300 p-2.5 rounded-lg font-mono font-bold text-slate-800 focus:ring-2 focus:ring-blue-500" value="10">
-                            <span class="absolute right-3 top-3 text-[10px] text-slate-400 font-extrabold">MENIT</span>
-                        </div>
-                        <div class="relative">
-                            <input type="number" id="inputSeconds" min="0" max="59" class="w-full border border-slate-300 p-2.5 rounded-lg font-mono font-bold text-slate-800 focus:ring-2 focus:ring-blue-500" value="30">
-                            <span class="absolute right-3 top-3 text-[10px] text-slate-400 font-extrabold">DETIK</span>
-                        </div>
-                    </div>
-                    <p id="timeContextHint" class="text-xs text-slate-400 mt-1.5 font-medium">*Masukkan durasi untuk pembuatan 1 unit produk.</p>
-                </div>
-
-                <div id="wrapperQuantity" class="hidden animate-fadeIn">
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">
-                        2. Jumlah Pesanan Partai Besar (Quantity Batch)
-                    </label>
-                    <div class="relative">
-                        <input type="number" id="inputQuantity" min="1" class="w-full border border-slate-300 p-2.5 rounded-lg font-bold text-lg text-slate-800 bg-blue-50/20 focus:ring-2 focus:ring-blue-500" value="10">
-                        <span class="absolute right-3 top-3.5 text-xs text-slate-500 font-bold">PCS / UNIT</span>
-                    </div>
-                </div>
-
-                <div id="wrapperNesting" class="hidden bg-slate-50 p-3 rounded-xl border border-slate-200">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <span class="text-xs font-bold text-slate-700 block">Aktifkan Efisiensi Jalur Layout (Nesting Toggle)</span>
-                            <span class="text-[11px] text-slate-400 font-normal block">Nyalakan jika pemotongan 2D plat digabung rapat dalam satu lembar kerja. Matikan jika pengerjaan berbentuk 3D Carving/Ukir absolut.</span>
-                        </div>
-                        <label class="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" id="nestingToggle" checked onchange="runBackgroundEngine()" class="sr-only peer">
-                            <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                        </label>
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">
-                        3. Spesifikasi Material Pengarah Umur Pakai Alat
-                    </label>
-                    <select id="materialType" onchange="runBackgroundEngine()" class="w-full border border-slate-300 p-2.5 rounded-lg font-medium text-slate-800 bg-white focus:ring-2 focus:ring-blue-500">
-                        <option value="LOW">Kayu Lunak / Pinus (Abrasivitas Rendah)</option>
-                        <option value="THERMAL">Akrilik / Plastik (Sensitif Suhu)</option>
-                        <option value="MEDIUM">Kayu Keras / Jati / Mahoni (Kerapatan Tinggi)</option>
-                        <option value="HIGH" selected>MDF / Plywood / Multiplek (Abrasivitas Perekat Resin)</option>
-                        <option value="METAL">Aluminium / Kuningan / ACP (Torsi Mekanis Tinggi)</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="mt-6 p-5 bg-slate-900 rounded-xl text-white space-y-4 shadow-inner">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 border-b border-slate-800 pb-4">
-                    <div>
-                        <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-0.5">Total Harga Invoice</span>
-                        <span class="text-3xl font-black text-emerald-400 block font-mono" id="renderTotalPrice">Rp 0</span>
-                    </div>
-                    <div id="cardPerPiece" class="hidden border-l border-slate-800 pl-4">
-                        <span class="text-[10px] font-bold uppercase tracking-wider text-blue-400 block mb-0.5">Harga Pokok per Unit (Pcs)</span>
-                        <span class="text-2xl font-black text-blue-400 block font-mono" id="renderPricePerPiece">Rp 0</span>
-                    </div>
-                </div>
-
-                <div class="text-xs text-slate-400 space-y-2 font-mono">
-                    <div class="flex justify-between border-b border-slate-800/50 pb-1 text-slate-500">
-                        <span>METODE OPR MESIN:</span>
-                        <span id="renderMachiningMode" class="font-bold text-slate-300">LINE-BY-LINE ABSOLUTE</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span>• Komponen Tetap (Setup & CAM):</span>
-                        <span class="text-slate-200" id="renderSetupFee">Rp 0</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span>• Pemakaian Mesin Terpadu (MHR):</span>
-                        <span class="text-slate-200" id="renderMHRTotal">Rp 0</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span>• Nilai Konsumsi Mata Potong:</span>
-                        <span class="text-slate-200" id="renderToolCost">Rp 0</span>
-                    </div>
-                    <div class="flex justify-between border-t border-slate-800 pt-1.5 text-slate-400 font-sans font-semibold">
-                        <span>Total Akumulasi Durasi Kerja Fisik Mesin:</span>
-                        <span class="text-amber-400 font-mono" id="renderTotalDurationText">0 Jam 0 Menit 0 Detik</span>
-                    </div>
-                </div>
-            </div>
-        </div>
+<div class="container">
+    <div class="header">
+        <h1>Sistem Kalkulasi Jasa CNC Presisi</h1>
+        <p>Verified Engine: MHR Rp 110.000/jam | Lembaran 1220x2440 mm</p>
     </div>
 
-    <script>
-        // =========================================================================
-        // LACI PARAMETER PASAR (UBAH ANGKA DI SINI JIKA KONDISI PASAR BERUBAH)
-        // =========================================================================
-        const MARKET_PARAMETERS = {
-            OPERATOR_WAGE_TARGET  : 6500000, // Target gaji bulanan layak operator (Rp)
-            MONTHLY_EFFECTIVE_HRS : 140,     // Standar jam kerja efektif operasional bulanan (Jam)
-            MACHINE_ASSET_VALUE   : 100000000, // Nilai investasi harga beli aset mesin CNC (Rp)
-            DEPRECIATION_PERIOD_MO: 60,      // Masa penyusutan teknis mesin dalam bulan (5 Tahun)
-            POWER_CONSUMPTION_KW  : 5,       // Konsumsi daya listrik riil total sistem mesin (kWh)
-            PLN_ELECTRICITY_TARIFF: 1700,    // Tarif dasar listrik PLN sektor Bisnis/Industri (Rp/kWh)
-            SOFTWARE_LICENSE_PRICE: 32000000, // Harga lisensi permanen resmi software CAM (Rp)
-            SOFTWARE_AMORT_PERIOD : 48,      // Siklus amortisasi software dalam bulan (4 Tahun)
-            FACILITY_MAINTENANCE  : 1476000,  // Anggaran bulanan sewa tempat + maintenance linear guide (Rp)
+    <div class="tabs">
+        <button class="tab-btn active" id="btnB2C" onclick="switchTab('B2C')">1. PESANAN SATUAN (B2C)</button>
+        <button class="tab-btn" id="btnB2B" onclick="switchTab('B2B')">2. PESANAN PARTAI / BATCH (B2B)</button>
+    </div>
+
+    <div class="content">
+        <div class="section-title">Konfigurasi Tarif & Alat (Bisa Disesuaikan)</div>
+        <div class="grid-3 form-group">
+            <div>
+                <label>Tarif MHR (Rp/Jam)</label>
+                <input type="number" id="cfgMHR" value="110000" oninput="calculate()">
+            </div>
+            <div>
+                <label>Setup Fee (Rp)</label>
+                <input type="number" id="cfgSetup" value="50000" oninput="calculate()">
+            </div>
+            <div>
+                <label>Keausan Bit (Rp/Jam)</label>
+                <select id="cfgBitWear" onchange="calculate()">
+                    <option value="5000">Rp 5.000 (Kayu Lunak)</option>
+                    <option value="8000">Rp 8.000 (Akrilik)</option>
+                    <option value="12000">Rp 12.000 (Kayu Keras)</option>
+                    <option value="20000" selected>Rp 20.000 (MDF/Plywood)</option>
+                    <option value="35000">Rp 35.000 (Aluminium/ACP)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="section-title" style="margin-top: 20px;">Data Simulasi Waktu CAM (Absolut)</div>
+        <div class="grid-2 form-group">
+            <div>
+                <label>Jam Kerja Mesin</label>
+                <input type="number" id="camHours" value="1" min="0" oninput="calculate()">
+            </div>
+            <div>
+                <label>Menit Kerja Mesin</label>
+                <input type="number" id="camMinutes" value="10" min="0" max="59" oninput="calculate()">
+            </div>
+        </div>
+        <div class="readonly-box" id="timeHint">
+            *Masukkan total waktu CAM untuk pembuatan 1 buah produk.
+        </div>
+
+        <div id="sectionB2B" style="display: none; margin-top: 20px;">
+            <div class="section-title">Validasi Geometri & Kuantitas (Lembaran 122 x 244 cm)</div>
+            <div class="grid-3 form-group">
+                <div>
+                    <label>Jumlah Pesanan (Pcs)</label>
+                    <input type="number" id="inQty" value="10" min="1" oninput="calculate()">
+                </div>
+                <div>
+                    <label>Panjang Produk (cm)</label>
+                    <input type="number" id="prodP" value="30" min="1" oninput="calculate()">
+                </div>
+                <div>
+                    <label>Lebar Produk (cm)</label>
+                    <input type="number" id="prodL" value="20" min="1" oninput="calculate()">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Diameter Mata Pisau / Bit (Untuk Toleransi Jarak Potong)</label>
+                <select id="bitSizeMm" onchange="calculate()">
+                    <option value="6.35">6.35 mm (1/4 Inch End Mill)</option>
+                    <option value="8">8.00 mm</option>
+                    <option value="10" selected>10.00 mm</option>
+                </select>
+            </div>
+            <div class="readonly-box" id="geometryResult" style="background: #eff6ff; border-color: #93c5fd; color: #1e3a8a;">
+                ⏳ Menghitung kapasitas muat material...
+            </div>
+        </div>
+
+        <div class="invoice-card">
+            <div class="inv-grid">
+                <div>
+                    <div class="inv-label">Total Tagihan Invoice</div>
+                    <div class="inv-value" id="outGrandTotal">Rp 0</div>
+                </div>
+                <div id="boxPricePerPiece" style="display: none;">
+                    <div class="inv-label">Harga Satuan Net (Per Pcs)</div>
+                    <div class="inv-value blue" id="outPricePerPiece">Rp 0</div>
+                </div>
+            </div>
+
+            <div class="laci-title">
+                <span>DISTRIBUSI ARUS KAS (SOP 5 LACI KEUANGAN)</span>
+                <span class="badge" id="outTotalTimeText">1 Jam 10 Menit</span>
+            </div>
+            <table class="laci-table">
+                <tr>
+                    <td>1. Pos Gaji Operator (Rp 46.429/jam)</td>
+                    <td class="amount" id="laciGaji">Rp 0</td>
+                </tr>
+                <tr>
+                    <td>2. Pos Operasional & Software (Rp 24.286/jam + Setup)</td>
+                    <td class="amount" id="laciOps">Rp 0</td>
+                </tr>
+                <tr>
+                    <td>3. Pos Aset Mesin & Tooling (Rp 14.285/jam + Bit)</td>
+                    <td class="amount" id="laciAset">Rp 0</td>
+                </tr>
+                <tr>
+                    <td>4. Pos Dana Darurat / Risiko (Rp 8.500/jam)</td>
+                    <td class="amount" id="laciRisiko">Rp 0</td>
+                </tr>
+                <tr>
+                    <td>5. Pos Laba Bersih / ROI Pemilik (Rp 16.500/jam)</td>
+                    <td class="amount" id="laciLaba">Rp 0</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    let CURRENT_MODE = 'B2C';
+    
+    // Standar Ukuran Lembaran CNC Industri (cm)
+    const SHEET_L_CM = 244;
+    const SHEET_W_CM = 122;
+
+    function switchTab(mode) {
+        CURRENT_MODE = mode;
+        document.getElementById('btnB2C').classList.toggle('active', mode === 'B2C');
+        document.getElementById('btnB2B').classList.toggle('active', mode === 'B2B');
+        
+        document.getElementById('sectionB2B').style.display = (mode === 'B2B') ? 'block' : 'none';
+        document.getElementById('boxPricePerPiece').style.display = (mode === 'B2B') ? 'block' : 'none';
+        
+        const hint = document.getElementById('timeHint');
+        if (mode === 'B2C') {
+            hint.innerText = '*Masukkan total waktu CAM untuk pembuatan 1 buah produk (Satuan).';
+        } else {
+            hint.innerText = '*Masukkan waktu CAM untuk seluruh proyek ATAU waktu per unit (Sistem akan mengalikan presisi dengan kuantitas).';
+        }
+        calculate();
+    }
+
+    function calculate() {
+        // 1. Ambil Nilai Parameter Pasar
+        const mhrRate = parseFloat(document.getElementById('cfgMHR').value) || 0;
+        const setupFee = parseFloat(document.getElementById('cfgSetup').value) || 0;
+        const bitWearRate = parseFloat(document.getElementById('cfgBitWear').value) || 0;
+
+        // 2. Ambil Input Waktu CAM
+        const hours = parseFloat(document.getElementById('camHours').value) || 0;
+        const minutes = parseFloat(document.getElementById('camMinutes').value) || 0;
+        const inputTimeHours = hours + (minutes / 60);
+
+        let totalMachineHours = 0;
+        let qty = 1;
+
+        if (CURRENT_MODE === 'B2C') {
+            totalMachineHours = inputTimeHours;
+            qty = 1;
+        } else {
+            qty = Math.max(1, parseInt(document.getElementById('inQty').value) || 1);
+            const prodP = parseFloat(document.getElementById('prodP').value) || 10;
+            const prodL = parseFloat(document.getElementById('prodL').value) || 10;
+            const bitMm = parseFloat(document.getElementById('bitSizeMm').value) || 10;
             
-            RISK_FACTOR_PERCENT   : 10,      // Faktor asuransi kontingensi internal (Patah bit/cacat) (%)
-            PROFIT_MARGIN_PERCENT : 20,      // Target margin keuntungan bersih pemilik bisnis (%)
+            // Konversi Bit dari mm ke cm
+            const bitCm = bitMm / 10;
+
+            // Logika Grid Nesting + Auto-Rotation Check (Mencari posisi muat terbanyak)
+            const effP = prodP + bitCm;
+            const effL = prodL + bitCm;
+
+            // Opsi 1: Posisi Normal
+            const capNormal = Math.floor(SHEET_L_CM / effP) * Math.floor(SHEET_W_CM / effL);
+            // Opsi 2: Posisi Diputar 90 Derajat
+            const capRotated = Math.floor(SHEET_L_CM / effL) * Math.floor(SHEET_W_CM / effP);
             
-            BASE_SETUP_PROGRAM_FEE: 50000,   // Biaya dasar komparatif keahlian koordinat & clamping (Rp)
-        };
+            const maxCapPerSheet = Math.max(1, capNormal, capRotated);
+            const sheetsNeeded = Math.ceil(qty / maxCapPerSheet);
 
-        // Indeks Biaya Keausan Mata Bit Per Jam Berdasarkan Tingkat Abrasivitas Bahan
-        const TOOL_WEAR_INDEX = {
-            LOW    : 5000,  // Kayu Lunak / Pinus
-            THERMAL: 8000,  // Akrilik
-            MEDIUM : 12000, // Kayu Keras / Jati
-            HIGH   : 20000, // MDF / Plywood
-            METAL  : 35000  // Aluminium / ACP
-        };
+            // Tampilkan analisis geometri ke operator
+            document.getElementById('geometryResult').innerHTML = 
+                `📐 <b>Analisis Geometri Lembaran (122x244 cm):</b><br>` +
+                `• Kapasitas Muat Maksimal : <b>${maxCapPerSheet} Pcs / Lembar</b> (Sudah termasuk jarak bit ${bitMm}mm)<br>` +
+                `• Total Material Dibutuhkan : <b>${sheetsNeeded} Lembar Utuh</b> untuk memproduksi ${qty} Pcs.`;
 
-        // =========================================================================
-        // BACKGROUND CALCULATOR ENGINE (HARAM DI-BONGKAR PASANG)
-        // =========================================================================
-        let CURRENT_MODULE = "B2C"; // Default awal modul satuan
-
-        // Kumpulan Event Listener Otomatis
-        document.getElementById('inputHours').addEventListener('input', runBackgroundEngine);
-        document.getElementById('inputMinutes').addEventListener('input', runBackgroundEngine);
-        document.getElementById('inputSeconds').addEventListener('input', runBackgroundEngine);
-        document.getElementById('inputQuantity').addEventListener('input', runBackgroundEngine);
-
-        function switchModule(moduleType) {
-            CURRENT_MODULE = moduleType;
-            const btnB2C = document.getElementById('tabB2C');
-            const btnB2B = document.getElementById('tabB2B');
-            const wrapQty = document.getElementById('wrapperQuantity');
-            const wrapNesting = document.getElementById('wrapperNesting');
-            const cardPiece = document.getElementById('cardPerPiece');
-            const hintText = document.getElementById('timeContextHint');
-
-            if (moduleType === 'B2C') {
-                btnB2C.className = "flex-1 py-4 text-center font-bold text-sm border-b-2 border-blue-600 text-blue-600 transition";
-                btnB2B.className = "flex-1 py-4 text-center font-bold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800 transition";
-                wrapQty.classList.add('hidden');
-                wrapNesting.classList.add('hidden');
-                cardPiece.classList.add('hidden');
-                hintText.innerText = "*Masukkan durasi untuk pembuatan 1 unit produk.";
-            } else {
-                btnB2C.className = "flex-1 py-4 text-center font-bold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800 transition";
-                btnB2B.className = "flex-1 py-4 text-center font-bold text-sm border-b-2 border-blue-600 text-blue-600 transition";
-                wrapQty.classList.remove('hidden');
-                wrapNesting.classList.remove('hidden');
-                cardPiece.classList.remove('hidden');
-                hintText.innerText = "*Masukkan durasi dasar awal untuk pembuatan 1 unit produk.";
-            }
-            runBackgroundEngine();
+            // Waktu potong bersifat linear mutlak mengikuti fisik feed rate mesin
+            totalMachineHours = inputTimeHours * qty;
         }
 
-        function runBackgroundEngine() {
-            // 1. DYNAMIC MHR ENGINE CALCULATION (Menghitung Otomatis MHR dari Parameter Konfigurasi)
-            const p = MARKET_PARAMETERS;
-            
-            const costLabor       = p.OPERATOR_WAGE_TARGET / p.MONTHLY_EFFECTIVE_HRS;
-            const costDepreciation= p.MACHINE_ASSET_VALUE / (p.DEPRECIATION_PERIOD_MO * p.MONTHLY_EFFECTIVE_HRS);
-            const costElectricity = p.POWER_CONSUMPTION_KW * p.PLN_ELECTRICITY_TARIFF;
-            const costSoftware    = p.SOFTWARE_LICENSE_PRICE / (p.SOFTWARE_AMORT_PERIOD * p.MONTHLY_EFFECTIVE_HRS);
-            const costFacility    = p.FACILITY_MAINTENANCE / p.MONTHLY_EFFECTIVE_HRS;
-            
-            const baseBreakEvenRate = costLabor + costDepreciation + costElectricity + costSoftware + costFacility;
-            const multiplierFactor  = 1 + ((p.RISK_FACTOR_PERCENT + p.PROFIT_MARGIN_PERCENT) / 100);
-            
-            // Angka MHR Komersial Hasil Kalkulasi Logis Background
-            const COMPUTED_MHR_RATE = baseBreakEvenRate * multiplierFactor;
+        // 3. Hitung Tagihan Utama
+        const totalMhrCost = totalMachineHours * mhrRate;
+        const totalBitCost = totalMachineHours * bitWearRate;
+        const grandTotal = setupFee + totalMhrCost + totalBitCost;
+        const pricePerPiece = grandTotal / qty;
 
-            // 2. AMBIL DATA INPUT LAPANGAN
-            const hours = parseFloat(document.getElementById('inputHours').value) || 0;
-            const minutes = parseFloat(document.getElementById('inputMinutes').value) || 0;
-            const seconds = parseFloat(document.getElementById('inputSeconds').value) || 0;
-            const materialKey = document.getElementById('materialType').value;
-            
-            let quantity = 1;
-            if (CURRENT_MODULE === 'B2B') {
-                quantity = parseInt(document.getElementById('inputQuantity').value) || 1;
-            }
+        // 4. Hitung SOP 5 Laci Keuangan (Berdasarkan rasio ilmiah MHR Rp 110rb)
+        // Rasio per jam dari MHR Rp 110.000: Gaji(46429), Ops(24286), Aset(14285), Risiko(8500), Laba(16500)
+        const laciGajiVal   = totalMachineHours * 46429;
+        const laciOpsVal    = (totalMachineHours * 24286) + setupFee; // Setup masuk ke operasional/software
+        const laciAsetVal   = (totalMachineHours * 14285) + totalBitCost; // Bit wear masuk ke uang tooling
+        const laciRisikoVal = totalMachineHours * 8500;
+        const laciLabaVal   = totalMachineHours * 16500;
 
-            const singleUnitHours = hours + (minutes / 60) + (seconds / 3600);
-            const toolWearRatePerHour = TOOL_WEAR_INDEX[materialKey];
+        // 5. Render ke UI
+        document.getElementById('outGrandTotal').innerText = formatRupiah(grandTotal);
+        document.getElementById('outPricePerPiece').innerText = formatRupiah(pricePerPiece);
+        
+        const outH = Math.floor(totalMachineHours);
+        const outM = Math.round((totalMachineHours - outH) * 60);
+        document.getElementById('outTotalTimeText').innerText = `${outH} Jam ${outM} Menit`;
 
-            let effectiveTotalHours = 0;
-            let displayModeText = "";
+        document.getElementById('laciGaji').innerText = formatRupiah(laciGajiVal);
+        document.getElementById('laciOps').innerText = formatRupiah(laciOpsVal);
+        document.getElementById('laciAset').innerText = formatRupiah(laciAsetVal);
+        document.getElementById('laciRisiko').innerText = formatRupiah(laciRisikoVal);
+        document.getElementById('laciLaba').innerText = formatRupiah(laciLabaVal);
+    }
 
-            // 3. LOGIKA INTEGRITAS WAKTU: B2C VS B2B (NESTING VS LINEAR)
-            if (CURRENT_MODULE === 'B2C') {
-                effectiveTotalHours = singleUnitHours;
-                displayModeText = "B2C - UNIT ABSOLUTE LINEAR";
-            } else {
-                const isNestingActive = document.getElementById('nestingToggle').checked;
-                if (isNestingActive) {
-                    let nestingEfficiencyDiscount = 0;
-                    if (quantity >= 2 && quantity <= 5) nestingEfficiencyDiscount = 0.10;
-                    else if (quantity >= 6 && quantity <= 20) nestingEfficiencyDiscount = 0.15;
-                    else if (quantity > 20) nestingEfficiencyDiscount = 0.20;
-                    
-                    effectiveTotalHours = (singleUnitHours * quantity) * (1 - nestingEfficiencyDiscount);
-                    displayModeText = `B2B - BATCH OPTIMIZED NESTING`;
-                } else {
-                    effectiveTotalHours = singleUnitHours * quantity;
-                    displayModeText = "B2B - FIXED LINEAR PROCESS (NO DISCOUNT)";
-                }
-            }
+    function formatRupiah(val) {
+        return 'Rp ' + Math.round(val).toLocaleString('id-ID');
+    }
 
-            // 4. HITUNG STRUKTUR HARGA INVOICE
-            const totalMHRCharge = effectiveTotalHours * COMPUTED_MHR_RATE;
-            const totalToolCharge = effectiveTotalHours * toolWearRatePerHour;
-            const grandInvoiceTotal = p.BASE_SETUP_PROGRAM_FEE + totalMHRCharge + totalToolCharge;
-            const pricePerIndividualPiece = grandInvoiceTotal / quantity;
-
-            // 5. RENDER OUTPUT KE LAYAR KHUSUS OPERATOR/PELANGGAN
-            document.getElementById('renderTotalPrice').innerText = formatRupiah(grandInvoiceTotal);
-            document.getElementById('renderPricePerPiece').innerText = formatRupiah(pricePerPiece);
-            document.getElementById('renderSetupFee').innerText = formatRupiah(p.BASE_SETUP_PROGRAM_FEE);
-            document.getElementById('renderMHRTotal').innerText = formatRupiah(totalMHRCharge);
-            document.getElementById('renderToolCost').innerText = formatRupiah(totalToolCharge);
-            document.getElementById('renderMachiningMode').innerText = displayModeText;
-            
-            if (CURRENT_MODULE === 'B2B') {
-                document.getElementById('setupDivisor').innerText = quantity.toLocaleString('id-ID');
-                document.getElementById('displaySetupPerPcs').innerText = `${formatRupiah(p.BASE_SETUP_PROGRAM_FEE / quantity)} / pcs`;
-            }
-
-            // Render Teks Akumulasi Waktu Nyata Mesin Menyala
-            const outHours = Math.floor(effectiveTotalHours);
-            const outMinutes = Math.floor((effectiveTotalHours - outHours) * 60);
-            const outSeconds = Math.round(((effectiveTotalHours - outHours) * 60 - outMinutes) * 60);
-            document.getElementById('renderTotalDurationText').innerText = `${outHours} Jam ${outMinutes} Menit ${outSeconds} Detik`;
-        }
-
-        function formatRupiah(number) {
-            return 'Rp ' + Math.round(number).toLocaleString('id-ID');
-        }
-
-        // Inisialisasi Sistem Saat Pertama Kali Booting
-        window.onload = function() {
-            switchModule('B2C');
-        };
-    </script>
+    // Booting awal
+    window.onload = function() { switchTab('B2C'); };
+</script>
 </body>
 </html>
