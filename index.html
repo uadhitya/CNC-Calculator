@@ -13,39 +13,55 @@
         <div class="border-b border-slate-200 pb-4 mb-6 flex justify-between items-center">
             <div>
                 <h1 class="text-2xl font-bold text-slate-800">Kalkulator Jasa CNC Presisi</h1>
-                <p class="text-sm text-slate-500 mt-1">Sistem estimasi harga berbasis data pemesinan & efisiensi nesting</p>
+                <p class="text-sm text-slate-500 mt-1">Sistem estimasi harga berbasis data pemesinan & efisiensi batch</p>
             </div>
-            <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full border border-emerald-300">Smart Nesting</span>
+            <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full border border-emerald-300">Smart Pricing</span>
         </div>
         
         <!-- Form Input -->
         <div class="space-y-5">
             
-            <!-- 1. Pilihan Mode Input Waktu (SOLUSI KRUSIAL) -->
-            <div class="bg-blue-50 p-3.5 rounded-lg border border-blue-200">
-                <label class="block text-xs font-bold uppercase tracking-wider text-blue-800 mb-2">
-                    ⚡ Mode Input Durasi dari Software CAM:
+            <!-- 1. Pilihan Mode Input Waktu (3 MODE ANTI-RUGI) -->
+            <div class="bg-slate-50 p-3.5 rounded-lg border border-slate-300">
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2.5">
+                    ⚡ Karakteristik Pemesinan & Mode CAM:
                 </label>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm font-medium">
-                    <label class="flex items-center space-x-2 bg-white p-2 rounded border border-blue-200 cursor-pointer hover:bg-blue-50/50">
-                        <input type="radio" name="timeMode" value="single" checked onchange="calculateScientific()" class="text-blue-600 focus:ring-blue-500">
-                        <span>Durasi untuk <b>1 Pcs Saja</b><br><small class="text-slate-400 font-normal">(Auto-hitung efisiensi batch)</small></span>
+                <div class="space-y-2 text-xs md:text-sm font-medium">
+                    <!-- Option 1: Nesting -->
+                    <label class="flex items-start space-x-2.5 bg-white p-2.5 rounded border border-blue-200 cursor-pointer hover:bg-blue-50/50 transition">
+                        <input type="radio" name="timeMode" value="nesting" checked onchange="calculateScientific()" class="mt-0.5 text-blue-600 focus:ring-blue-500">
+                        <div>
+                            <span class="font-bold text-slate-800">1 Pcs - 2D Cutting / Bisa Di-Nesting</span>
+                            <p class="text-slate-400 font-normal text-xs">Waktu potong partai banyak otomatis lebih cepat (Diskon volume 10-20%).</p>
+                        </div>
                     </label>
-                    <label class="flex items-center space-x-2 bg-white p-2 rounded border border-blue-200 cursor-pointer hover:bg-blue-50/50">
-                        <input type="radio" name="timeMode" value="total" onchange="calculateScientific()" class="text-blue-600 focus:ring-blue-500">
-                        <span>Durasi <b>Total Aktual</b><br><small class="text-slate-400 font-normal">(Sudah di-nesting di CAM)</small></span>
+                    <!-- Option 2: Linear / 3D Carving -->
+                    <label class="flex items-start space-x-2.5 bg-white p-2.5 rounded border border-amber-200 cursor-pointer hover:bg-amber-50/50 transition">
+                        <input type="radio" name="timeMode" value="linear" onchange="calculateScientific()" class="mt-0.5 text-amber-600 focus:ring-amber-500">
+                        <div>
+                            <span class="font-bold text-slate-800">1 Pcs - 3D Carving / Part Besar (Waktu Linear)</span>
+                            <p class="text-slate-400 font-normal text-xs">Tidak bisa di-nesting. Waktu absolut ($T \times Q$). Setup fee tetap terbagi rata.</p>
+                        </div>
+                    </label>
+                    <!-- Option 3: Total CAM -->
+                    <label class="flex items-start space-x-2.5 bg-white p-2.5 rounded border border-slate-200 cursor-pointer hover:bg-slate-50 transition">
+                        <input type="radio" name="timeMode" value="total" onchange="calculateScientific()" class="mt-0.5 text-slate-600 focus:ring-slate-500">
+                        <div>
+                            <span class="font-bold text-slate-800">Durasi Total Aktual dari CAM</span>
+                            <p class="text-slate-400 font-normal text-xs">Masukkan total waktu dari simulasi CAM untuk seluruh layout batch.</p>
+                        </div>
                     </label>
                 </div>
             </div>
 
-            <!-- 2. Input Waktu Presisi (Jam, Menit, Detik) -->
+            <!-- 2. Input Waktu Presisi -->
             <div>
                 <label class="block text-sm font-semibold text-slate-700 mb-1">
                     1. Waktu Pengerjaan Mesin (Sesuai Pilihan Mode di Atas)
                 </label>
                 <div class="grid grid-cols-3 gap-2">
                     <div class="relative">
-                        <input type="number" id="inputHours" min="0" class="w-full border border-slate-300 p-2.5 rounded-lg focus:ring-2 focus:ring-blue-500 font-medium text-slate-800" placeholder="0" value="0">
+                        <input type="number" id="inputHours" min="0" class="w-full border border-slate-300 p-2.5 rounded-lg focus:ring-2 focus:ring-blue-500 font-medium text-slate-800" placeholder="0" value="1">
                         <span class="absolute right-3 top-2.5 text-xs text-slate-400 font-bold">JAM</span>
                     </div>
                     <div class="relative">
@@ -59,20 +75,18 @@
                 </div>
             </div>
 
-            <!-- 3. Input Jumlah Barang (Quantity) -->
+            <!-- 3. Input Jumlah Barang -->
             <div>
                 <label class="block text-sm font-semibold text-slate-700 mb-1">
                     2. Jumlah Barang / Quantity Proyek (Pcs)
                 </label>
                 <div class="relative rounded-md shadow-sm">
-                    <input type="number" id="inputQuantity" min="1" step="1" class="w-full border border-slate-300 p-2.5 rounded-lg focus:ring-2 focus:ring-blue-500 font-bold text-slate-800 text-lg bg-slate-50" placeholder="1" value="10">
+                    <input type="number" id="inputQuantity" min="1" step="1" class="w-full border border-slate-300 p-2.5 rounded-lg focus:ring-2 focus:ring-blue-500 font-bold text-slate-800 text-lg bg-slate-50" placeholder="1" value="20">
                     <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                         <span class="text-slate-500 font-semibold sm:text-sm">PCS / UNIT</span>
                     </div>
                 </div>
-                <p class="text-xs text-emerald-600 mt-1 font-semibold" id="nestingBadgeText">
-                    *Semakin banyak pesanan, biaya Setup & Waktu Mesin otomatis lebih efisien.
-                </p>
+                <p class="text-xs mt-1.5 font-semibold" id="nestingBadgeText"></p>
             </div>
 
             <!-- 4. Input Material -->
@@ -116,9 +130,9 @@
             
             <!-- Rincian untuk Edukasi Pelanggan -->
             <div class="text-xs text-slate-600 space-y-2 bg-white p-3.5 rounded-lg border border-slate-200">
-                <p class="font-bold text-slate-700 border-b border-slate-100 pb-1.5 flex justify-between">
+                <p class="font-bold text-slate-700 border-b border-slate-100 pb-1.5 flex justify-between items-center">
                     <span>Rincian Komponen Biaya (Batch):</span>
-                    <span class="text-emerald-600 font-bold" id="displayEfficiencyRate"></span>
+                    <span class="font-bold" id="displayEfficiencyRate"></span>
                 </p>
                 
                 <div class="flex justify-between items-center">
@@ -162,7 +176,7 @@
             const quantity = parseInt(document.getElementById('inputQuantity').value) || 1;
             const toolWearRate = parseFloat(document.getElementById('materialType').value) || 0;
             
-            // Cek Mode Waktu (Single atau Total)
+            // Cek Mode Waktu
             const timeMode = document.querySelector('input[name="timeMode"]:checked').value;
             
             // 2. Konversi Waktu Input ke Jam Desimal
@@ -171,20 +185,23 @@
             let effectiveTotalHours = 0;
             let efficiencyDiscount = 0;
 
-            // 3. Logika Efisiensi Nesting (Jika pilih Mode Durasi 1 Pcs)
-            if (timeMode === 'single') {
+            // 3. Logika Pemesinan (Nesting vs Linear vs Total)
+            if (timeMode === 'nesting') {
                 if (quantity >= 2 && quantity <= 5) {
-                    efficiencyDiscount = 0.10; // Hemat waktu 10% karena nesting
+                    efficiencyDiscount = 0.10; // Hemat 10%
                 } else if (quantity >= 6 && quantity <= 20) {
-                    efficiencyDiscount = 0.15; // Hemat waktu 15%
+                    efficiencyDiscount = 0.15; // Hemat 15%
                 } else if (quantity > 20) {
-                    efficiencyDiscount = 0.20; // Hemat waktu maksimal 20%
+                    efficiencyDiscount = 0.20; // Hemat maksimal 20%
                 }
-                
-                // Total waktu adalah (Waktu 1 Pcs x Qty) dikurangi diskon efisiensi nesting
                 effectiveTotalHours = (inputTimeInHours * quantity) * (1 - efficiencyDiscount);
+            } else if (timeMode === 'linear') {
+                // TANPA DISKON WAKTU. Pekerjaan 3D Carving/Part Besar bersifat linear mutlak.
+                efficiencyDiscount = 0;
+                effectiveTotalHours = inputTimeInHours * quantity;
             } else {
-                // Jika pilih Mode Durasi Total Aktual dari CAM, gunakan waktu apa adanya
+                // Mode Total Aktual dari CAM
+                efficiencyDiscount = 0;
                 effectiveTotalHours = inputTimeInHours;
             }
             
@@ -196,7 +213,7 @@
             const pricePerPiece = grandTotal / quantity;
             const setupPerPiece = SETUP_FEE / quantity;
 
-            // 5. Tampilkan ke Layar dengan Format Rupiah
+            // 5. Tampilkan ke Layar
             document.getElementById('totalPrice').innerText = formatRupiah(grandTotal);
             document.getElementById('pricePerPiece').innerText = formatRupiah(pricePerPiece);
             
@@ -208,20 +225,26 @@
             document.getElementById('setupDivisor').innerText = quantity.toLocaleString('id-ID');
             document.getElementById('displaySetupPerPcs').innerText = `${formatRupiah(setupPerPiece)} / pcs`;
             
-            // Tampilkan Indikator Efisiensi di Layar
-            if (timeMode === 'single' && quantity > 1) {
+            // Tampilkan Indikator Mode di Layar
+            const badgeEl = document.getElementById('nestingBadgeText');
+            const rateEl = document.getElementById('displayEfficiencyRate');
+
+            if (timeMode === 'nesting' && quantity > 1) {
                 const percentHemat = Math.round(efficiencyDiscount * 100);
-                document.getElementById('displayEfficiencyRate').innerText = `⚡ Hemat Waktu Nesting ${percentHemat}%`;
-                document.getElementById('nestingBadgeText').innerText = `*⚡ Mode Nesting Aktif: Waktu potong per pcs otomatis hemat ${percentHemat}% dari waktu satuan.`;
-                document.getElementById('nestingBadgeText').className = "text-xs text-emerald-600 mt-1 font-bold";
-            } else if (timeMode === 'total') {
-                document.getElementById('displayEfficiencyRate').innerText = `📌 Mode Total Aktual CAM`;
-                document.getElementById('nestingBadgeText').innerText = `*Menggunakan angka waktu aktual dari layout nesting CAM Anda.`;
-                document.getElementById('nestingBadgeText').className = "text-xs text-blue-600 mt-1 font-medium";
+                rateEl.innerText = `⚡ Hemat Waktu Nesting ${percentHemat}%`;
+                rateEl.className = "font-bold text-emerald-600";
+                badgeEl.innerText = `*⚡ Mode Nesting Aktif: Waktu potong per pcs otomatis hemat ${percentHemat}% dari waktu satuan.`;
+                badgeEl.className = "text-xs mt-1.5 font-bold text-emerald-600";
+            } else if (timeMode === 'linear') {
+                rateEl.innerText = `🛑 Waktu Linear (Tanpa Diskon Nesting)`;
+                rateEl.className = "font-bold text-amber-600";
+                badgeEl.innerText = `*🛑 Mode Waktu Linear: Waktu mesin dibayar penuh 100% (23 Jam 20 Menit), namun Biaya Setup tetap hemat terbagi rata.`;
+                badgeEl.className = "text-xs mt-1.5 font-bold text-amber-600";
             } else {
-                document.getElementById('displayEfficiencyRate').innerText = ``;
-                document.getElementById('nestingBadgeText').innerText = `*Semakin banyak pesanan, biaya Setup & Waktu Mesin otomatis lebih efisien.`;
-                document.getElementById('nestingBadgeText').className = "text-xs text-slate-400 mt-1 font-normal";
+                rateEl.innerText = `📌 Mode Total Aktual CAM`;
+                rateEl.className = "font-bold text-blue-600";
+                badgeEl.innerText = `*Menggunakan angka durasi total dari simulasi layout CAM Anda.`;
+                badgeEl.className = "text-xs mt-1.5 font-medium text-blue-600";
             }
             
             // Konversi kembali effectiveTotalHours ke Jam, Menit, Detik untuk ditampilkan
